@@ -109,7 +109,7 @@ function Profile() {
                             </DialogTitle>
                             <DialogActions>
                                 <Button onClick={async () => {
-                                    await axios.delete(`/api/user/${user._id}`)
+                                    await axios.delete(`${BaseURL}/api/user/${user._id}`)
                                         .then(res => {
                                             navigate('/')
                                         }
