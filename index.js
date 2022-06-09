@@ -2,7 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require("cookie-parser");
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const path = require('path');
+const User = require('./models/users');
 require('dotenv').config();
 
 // initialize the app and set options
@@ -20,6 +22,23 @@ mongoose.connect(process.env.MONGO_SECRET_KEY,
     },
     (err) => {
         if (err) return console.error(err);
+        // create admin user if it doesn't exist
+        User.findOne({
+            email: process.env.ADMIN_EMAIL
+        }, async (err, user) => {
+            if (err) return console.error(err);
+            if (!user) {
+                const salt = await bcrypt.genSalt(10);
+                const password = await bcrypt.hash(process.env.ADMIN_PASSWORD, salt);
+                const admin = new User({
+                    username: process.env.ADMIN_USERNAME,
+                    email: process.env.ADMIN_EMAIL,
+                    password: password,
+                    isAdmin: true
+                });
+                admin.save();
+            }
+        })
         console.log('Connected to Mongoose');
     }
 )

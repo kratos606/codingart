@@ -13,7 +13,16 @@ td,tr{
 .navbar-settings{
     display: none!important;
 }
+.CodeMirror-scrollbar-filler {
+    visibility: hidden!important;
+}
 @media only screen and (max-width: 600px) {
+    .CodeMirror {
+            width:100%!important;
+        }
+    .bar{
+        min-width: 100%!important;
+    }
     .split{
         display: none;
     }
@@ -55,19 +64,25 @@ td,tr{
         /* Track */
         ::-webkit-scrollbar-track {
             background: #9f9f9f;
-            border-radius: 20px;
+            border-radius: 5px;
             border: 1px solid rgb(83, 83, 83);
         }
     
         /* Handle */
         ::-webkit-scrollbar-thumb {
             background: #2C343A;
-            border-radius: 20px;
+            border-radius: 5px;
         }
     
         /* Handle on hover */
         ::-webkit-scrollbar-thumb:hover {
             background: rgb(78, 78, 78)
+        }
+        .CodeMirror-vscrollbar{
+            width: 5px;
+        }
+        .CodeMirror-hscrollbar{
+            height: 5px;
         }
 }
 ::-webkit-scrollbar {

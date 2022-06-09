@@ -31,7 +31,7 @@ function Editor(props) {
     }, [props.fontSize])
     return (
         <>
-            <Box sx={{ width: '100%', minWidth: '400px', height: '60px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box sx={{ width: '100%', minWidth: '400px', height: '60px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} className={'bar'}>
                 <Box sx={{ height: '2rem', lineHeight: '2rem', width: 'max-content', background: 'rgb(255,255,255,0.2)', textAlign: 'center', borderRadius: '2rem', paddingInline: '1rem' }}>
                     {props.title}
                 </Box>

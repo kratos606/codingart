@@ -100,7 +100,7 @@ function CreateGame() {
                                         }
                                     }}
                                     sx={{
-                                        marginBlock: '1rem',
+                                        marginBlockStart: '1rem',
                                         minWidth: '220px',
                                     }}
                                     onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
@@ -171,6 +171,90 @@ function CreateGame() {
                         </Split>
                     </Split>
                 </Split>
+            </div>
+            <div style={{ display: 'none' }} className='flex'>
+                <div className='glass' style={{ padding: '2rem', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignContent: 'space-around' }}>
+                    <Typography variant='h4'>
+                        Create Game
+                    </Typography>
+                    <TextField
+                        className='input'
+                        variant="outlined"
+                        label="Name"
+                        type={'text'}
+                        value={inputs.name || ''}
+                        color='success'
+                        InputLabelProps={{
+                            style: {
+                                fontWeight: 'bold'
+                            }
+                        }}
+                        sx={{
+                            marginBlockStart: '1rem',
+                        }}
+                        onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
+                        fullWidth
+                    />
+                    <TextField
+                        className='input'
+                        variant="outlined"
+                        label="Points"
+                        type={'number'}
+                        value={inputs.pts || ''}
+                        color='success'
+                        InputLabelProps={{
+                            style: {
+                                fontWeight: 'bold'
+                            }
+                        }}
+                        sx={{
+                            marginBlockStart: '1rem',
+                        }}
+                        onChange={(e) => setInputs({ ...inputs, pts: e.target.value })}
+                        fullWidth
+                    />
+                    <TextField
+                        multiline
+                        className='input'
+                        variant="outlined"
+                        label="Description"
+                        type={'text'}
+                        color='success'
+                        maxRows={5}
+                        InputLabelProps={{
+                            style: {
+                                fontWeight: 'bold'
+                            }
+                        }}
+                        sx={{
+                            marginBlockStart: '1rem',
+                        }}
+                        InputProps={{
+                            style: {
+                                all: 'unset',
+                                height: '100px',
+                                padding: '1rem',
+                                borderRadius: '5px'
+                            }
+                        }}
+                        value={inputs.description || ''}
+                        onChange={(e) => setInputs({ ...inputs, description: e.target.value })}
+                        fullWidth
+                    />
+                </div>
+                <div className='glass' style={{ width: '100%' }}>
+                    <Box sx={{ marginLeft: '.5rem', height: '2rem', lineHeight: '2rem', width: '100px', background: 'rgb(255,255,255,0.2)', textAlign: 'center', borderRadius: '2rem', marginBlockEnd: '1rem' }}>
+                        Test Cases
+                    </Box><textarea style={{
+                        height: 'calc(93% - 2rem)', width: 'max(100%,120px)', padding: '1rem', background: '#001528', color: 'white', boxShadow: '0 0 2px white', resize: 'none', border: 'none', outline: 'none'
+                    }} value={testCases} onChange={(e) => setTestCases(e.target.value)} />
+                </div>
+                <div className='glass' style={{ width: '100%' }}>
+                    <Editor code={tester} setCode={setTester} title={'Test'} keymap={keymap} theme={theme} fontSize={fontSize} button={'Submit Test'} store={true} onClick={() => submit()} onReset={() => setTester(defaultTest)} />
+                </div>
+                <div className='glass' style={{ width: '100%' }}>
+                    <Editor code={codeBase} setCode={setCodeBase} title={'Code Base'} keymap={keymap} theme={theme} fontSize={fontSize} show={'off'} />
+                </div>
             </div>
             <Drawer
                 anchor={'right'}

@@ -1,0 +1,35 @@
+version: '3.9'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - MONGO_SECRET_KEY=mongodb://mongo:27018/myapp
+      - JSON_WEB_TOKEN_SECRET_KEY=sSeMvhbk5bPDSzpf274B9uFLK49oL2N1IRD1WDbSCRjleyo4tiwqA11aTZntRYkp
+      - PORT=80
+    ports:
+      - "80:80"
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+  mongo:
+    image: mongo
+    command: mongod --port 27018
+    volumes:
+      - data-volume:/data/db
+    ports:
+      - "27018:27018"
+    networks:
+      - app-network
+
+networks:
+    app-network:
+        driver: bridge
+
+volumes:
+    data-volume:
+    node_modules:
+    web-root:
+      driver: local
