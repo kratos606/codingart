@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Typography, Button, Drawer, TextField } from '@mui/material'
+import { Box, Typography, Button, Drawer, TextField, Snackbar, Alert } from '@mui/material'
 import { Link, useParams } from 'react-router-dom';
 import { Tooltip } from '../components';
 import Split from 'react-split'
@@ -50,13 +50,14 @@ function UpdateGame() {
     const [tester, setTester] = useState(localStorage.getItem('code') || defaultTest);
     const [testCases, setTestCases] = useState('');
     const [codeBase, setCodeBase] = useState('');
+    const [successStatus, setSuccessStatus] = useState(false);
+    const [successMessage, setSuccessMessage] = useState(null);
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dracula');
     const [keymap, setKeymap] = useState(localStorage.getItem('keymap') || 'sublime');
     const [fontSize, setFontSize] = useState(localStorage.getItem('fontSize') || 14);
     useEffect(() => {
         axios.get(`${BaseURL}/api/game/${id}`)
             .then(res => {
-                console.log(res.data)
                 setInputs(res.data)
                 setCodeBase(res.data.codeBase)
                 setTester(res.data.tester)
@@ -74,7 +75,13 @@ function UpdateGame() {
             tester: tester,
             testCases: testCases.split('\n').map(x => x.split(' ')),
         }
-        await axios.put(`${BaseURL}/api/game/${id}`, game);
+        await axios.put(`${BaseURL}/api/game/${id}`, game).then(res => {
+            setSuccessStatus(true)
+            setSuccessMessage(res.data.success ? 'Game updated successfully' : 'Game update failed');
+        }).catch(() => {
+            setSuccessStatus(true)
+            setSuccessMessage('Game update failed');
+        });
     }
     return (
         <>
@@ -321,6 +328,11 @@ function UpdateGame() {
                     </tr>
                 </table>
             </Drawer>
+            <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} open={successStatus} autoHideDuration={6000} onClose={() => { setSuccessStatus(false) }}>
+                <Alert severity={successMessage === 'Game update failed' ? 'error' : 'success'} onClose={() => { setSuccessStatus(false) }} variant="filled" sx={{ width: '100%' }}>
+                    {successMessage}
+                </Alert>
+            </Snackbar>
         </>
     )
 }

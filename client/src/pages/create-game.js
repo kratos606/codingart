@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Typography, Button, Drawer, TextField } from '@mui/material'
+import { Box, Typography, Button, Drawer, TextField, Snackbar, Alert } from '@mui/material'
 import { Link } from 'react-router-dom';
 import { Tooltip } from '../components';
 import Split from 'react-split'
@@ -49,6 +49,8 @@ function CreateGame() {
     const [tester, setTester] = useState(localStorage.getItem('code') || defaultTest);
     const [testCases, setTestCases] = useState('');
     const [codeBase, setCodeBase] = useState('');
+    const [successStatus, setSuccessStatus] = useState(false);
+    const [successMessage, setSuccessMessage] = useState(null);
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dracula');
     const [keymap, setKeymap] = useState(localStorage.getItem('keymap') || 'sublime');
     const [fontSize, setFontSize] = useState(localStorage.getItem('fontSize') || 14);
@@ -61,7 +63,13 @@ function CreateGame() {
             tester: tester,
             testCases: testCases.split('\n').map(x => x.split(' ')),
         }
-        await axios.post(`${BaseURL}/api/game`, game);
+        await axios.post(`${BaseURL}/api/game`, game).then(res => {
+            setSuccessStatus(true)
+            setSuccessMessage(res.data.success ? 'Game created successfully' : 'Game creation failed');
+        }).catch(() => {
+            setSuccessStatus(true)
+            setSuccessMessage('Game creation failed');
+        })
     }
     return (
         <>
@@ -305,6 +313,11 @@ function CreateGame() {
                     </tr>
                 </table>
             </Drawer>
+            <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} open={successStatus} autoHideDuration={6000} onClose={() => { setSuccessStatus(false) }}>
+                <Alert severity={successMessage === 'Game creation failed' ? 'error' : 'success'} onClose={() => { setSuccessStatus(false) }} variant="filled" sx={{ width: '100%' }}>
+                    {successMessage}
+                </Alert>
+            </Snackbar>
         </>
     )
 }

@@ -3,13 +3,12 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete'
 import VanillaTilt from 'vanilla-tilt';
-import { Button } from '@mui/material';
+import { Alert, Button, Snackbar } from '@mui/material';
 import BaseURL from '../config/app.config';
 
 function Tilt(props) {
     const { options, ...rest } = props;
     const tilt = useRef(null);
-
     useEffect(() => {
         VanillaTilt.init(tilt.current, options);
     }, [options]);
@@ -25,9 +24,17 @@ function AdminGame() {
         "max-glare": 1,
     };
     const [games, setGames] = useState([]);
+    const [successStatus, setSuccessStatus] = useState(false);
+    const [successMessage, setSuccessMessage] = useState(null);
     const navigate = useNavigate();
     const handleDelete = async (id) => {
-        await axios.delete(`${BaseURL}/api/game/${id}`);
+        await axios.delete(`${BaseURL}/api/game/${id}`).then(res => {
+            setSuccessStatus(true)
+            setSuccessMessage(res.data.success ? 'Game deleted successfully' : 'Game delete failed');
+        }).catch(() => {
+            setSuccessStatus(true)
+            setSuccessMessage('Game delete failed');
+        });
         setGames(games.filter(game => game._id !== id));
     }
     useEffect(() => {
@@ -59,6 +66,11 @@ function AdminGame() {
                 }
             </div>
             <button className='create-game' onClick={() => navigate('/admin/game/new')}>+</button>
+            <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} open={successStatus} autoHideDuration={6000} onClose={() => { setSuccessStatus(false) }}>
+                <Alert severity={successMessage === 'Game delete failed' ? 'error' : 'success'} onClose={() => { setSuccessStatus(false) }} variant="filled" sx={{ width: '100%' }}>
+                    {successMessage}
+                </Alert>
+            </Snackbar>
         </>
     )
 }
