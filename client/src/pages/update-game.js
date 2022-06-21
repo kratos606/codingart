@@ -12,7 +12,7 @@ import axios from 'axios'
 import BaseURL from '../config/app.config'
 import './css/game.css'
 
-const defaultTest = `import sys
+const defaultTest = `import sys,os
 import threading
 import json
 from temp.program import *
@@ -34,7 +34,8 @@ def run():
 
 def runtime():
     if t.is_alive():
-        raise RuntimeError('this solution takes too long')
+        print(json.dumps({'passed':False,'message':"This solution takes too long"}))
+        os._exit(0)
 
 if __name__ == '__main__':
     t = threading.Thread(target=run)
